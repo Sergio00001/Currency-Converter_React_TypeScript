@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ICurrency } from '../models/ICurrency'
-import swapIcon from '../assets/swap.png'
+import { CurrInput } from './CurrInput';
 
 export const Converter = () => {
     const [currOptions, setCurrOptions] = useState<ICurrency[]>([])
@@ -11,9 +11,8 @@ export const Converter = () => {
     const [selectedTo, setSelectedTo] = useState<ICurrency>()
     const [date, setDate] = useState('')
     const [fromInput, setFromInput] = useState(1)
-    const [toInput, setToInput] = useState(0)
     const [result, setResult] = useState('')
-    const [reverse, setReverse] = useState(false)
+    const [, setReverse] = useState(false)
 
     const fetching = async () => {
         try {
@@ -37,6 +36,7 @@ export const Converter = () => {
             if (obj.cc.includes(toOption)) {
                 setSelectedTo(obj)
             }
+            return obj
         })
     }
 
@@ -58,14 +58,17 @@ export const Converter = () => {
 
     useEffect(() => {
         fetching()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
         setOptions()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fromOption, toOption])
 
     useEffect(() => {
         calcResult()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fromInput, selectedFrom, selectedTo])
 
     return (
@@ -76,55 +79,16 @@ export const Converter = () => {
                 <h3 className='my-6 text-3xl'>{fromInput} {fromOption === 'From' ? '' : selectedFrom?.cc} is equivalent to</h3>
                 <h1 className='my-6 text-6xl'>{result} {toOption === 'To' ? '' : selectedTo?.cc}</h1>
                 <h4 className='my-6 text-xl'> As of {date}</h4>
-                <div className='flex items-center'>
-                    <div className='mr-5'>
-                        <div className='mb-2 flex items-center'>
-                            <div>
-                                <input
-                                    type="number"
-                                    className=' bg-gray-100 focus:bg-transparent rounded mr-4 px-2 py-4 w-80'
-                                    value={fromInput}
-                                    min={0}
-                                    onChange={e => setFromInput(+e.target.value)}
-                                />
-                            </div>
-                            <div className='flex flex-col'>
-                                <h2 className='text-center mb-1'>From</h2>
-                                <select
-                                    className='border px-1 py-4 rounded'
-                                    value={fromOption}
-                                    onChange={e => setFromOption(e.target.value)}
-                                >
-                                    <option disabled>From</option>
-                                    {currOptions.map(curr =>
-                                        <option
-                                            key={curr.cc}
-                                        >{curr.cc}</option>
-                                    )}
-                                </select>
-                                <h2 className='m-1 text-center' >To</h2>
-                                <select
-                                    className='border px-1 py-4 rounded'
-                                    value={toOption}
-                                    onChange={e => setToOption(e.target.value)}
-                                >
-                                    <option disabled>To</option>
-                                    {currOptions.map(curr =>
-                                        <option
-                                            key={curr.cc}
-                                        >{curr.cc}</option>
-                                    )}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <button
-                            className='px-1 py-2 active:scale-95 transition flex justify-center'
-                            onClick={reverseExchange}
-                        ><img src={swapIcon} alt="icon" className='w-1/2 h-1/2' /></button>
-                    </div>
-                </div>
+                <CurrInput
+                    fromInput={fromInput}
+                    currOptions={currOptions}
+                    fromOption={fromOption}
+                    toOption={toOption}
+                    setToOption={setToOption}
+                    setFromInput={setFromInput}
+                    setFromOption={setFromOption}
+                    reverseExchange={reverseExchange}
+                />
             </div>
         </div>
     )
