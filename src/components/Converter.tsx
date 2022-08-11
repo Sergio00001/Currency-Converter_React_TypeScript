@@ -5,9 +5,17 @@ import { useReverse } from '../hooks/useReverse';
 import { useOptionsAndCalcResult } from '../hooks/useOptionsAndCalcResult';
 
 export const Converter = () => {
-    const { currOptions, date, fromOption, toOption, setFromOption, setToOption } = useFetching()
+    const { isLoading, currOptions, date, fromOption, toOption, setFromOption, setToOption } = useFetching()
     const reverseExchange = useReverse({ fromOption, toOption, setFromOption, setToOption })
     const { selectedFrom, selectedTo, fromInput, result, setFromInput } = useOptionsAndCalcResult({ currOptions, fromOption, toOption })
+
+    if (isLoading) {
+        return (
+            <div className='flex justify-center items-center w-screen h-screen bg-green-100'>
+                <div className="loader"><div></div><div></div><div></div><div></div></div>
+            </div>
+        )
+    }
 
     return (
         <div className="flex justify-center items-center w-screen h-screen bg-green-100">
