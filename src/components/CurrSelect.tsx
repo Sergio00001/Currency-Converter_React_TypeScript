@@ -3,7 +3,7 @@ import { ICurrency } from '../models/ICurrency'
 
 interface CurrSelectProps {
     option: string,
-    setOption: (e: string) => void,
+    setOption: (str: string) => void,
     currOptions: ICurrency[]
 }
 
